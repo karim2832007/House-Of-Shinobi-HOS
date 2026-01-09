@@ -1,0 +1,47 @@
+workflows:
+  ios-unsigned:
+    name: "House Of Shinobi – Unsigned iOS Build"
+    environment:
+      vars:
+        APP_NAME: "House Of Shinobi"
+        APP_SHORT_NAME: "HOS"
+        APP_VERSION: "0.22"
+        DEVELOPER_NAME: "Gaming Mods"
+      xcode: latest
+
+    scripts:
+      - name: Set project version
+        script: |
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $APP_VERSION" Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $APP_VERSION" Info.plist
+
+      - name: Build Xcode project (unsigned)
+        script: |
+          xcodebuild \
+            -project HoS.xcodeproj \
+            -scheme HoS \
+            -configuration Release \
+            -archivePath build/HOS.xcarchive \
+            archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" PROVISIONING_PROFILE_SPECIFIER=""
+
+      - name: Export unsigned IPA
+        script: |
+          xcodebuild \
+            -exportArchive \
+            -archivePath build/HOS.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist <(cat <<EOF
+          {
+            "method": "ad-hoc",
+            "compileBitcode": false,
+            "signingStyle": "manual",
+            "stripSwiftSymbols": false,
+            "destination": "export",
+            "signingCertificate": "",
+            "provisioningProfiles": {}
+          }
+          EOF
+          )
+
+    artifacts:
+      - build/ipa/*.ipa

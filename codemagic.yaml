@@ -35,16 +35,13 @@ workflows:
 
       - name: Export unsigned IPA
         script: |
-          # Create exportOptions.plist (Codemagic-safe)
+          # Create exportOptions.plist (unsigned-safe)
           cat <<EOF > exportOptions.plist
           {
-            "method": "ad-hoc",
-            "compileBitcode": false,
+            "method": "development",
             "signingStyle": "manual",
-            "stripSwiftSymbols": false,
-            "destination": "export",
-            "signingCertificate": "",
-            "provisioningProfiles": {}
+            "compileBitcode": false,
+            "stripSwiftSymbols": false
           }
           EOF
 

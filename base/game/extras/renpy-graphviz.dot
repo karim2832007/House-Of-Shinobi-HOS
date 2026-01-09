@@ -1,0 +1,52 @@
+digraph  {
+	
+	n2[color="blue",label=" action editor",shape="egg",style="bold"];
+	n1[color="blue",label=" new action editor",shape="egg",style="bold"];
+	n23[color="blue",label="about",shape="egg",style="bold"];
+	n25[color="blue",label="file slots",shape="egg",style="bold"];
+	n22[color="blue",label="game menu",shape="egg",style="bold"];
+	n32[color="blue",label="gamepad help",shape="egg",style="bold"];
+	n12[color="blue",label="glossary word",shape="egg",style="bold"];
+	n13[color="blue",label="glossary word frame",shape="egg",style="bold"];
+	n29[color="blue",label="help",shape="egg",style="bold"];
+	n28[color="blue",label="history",shape="egg",style="bold"];
+	n30[color="blue",label="keyboard help",shape="egg",style="bold"];
+	n26[color="blue",label="load",shape="egg",style="bold"];
+	n21[color="blue",label="main menu",shape="egg",style="bold"];
+	n31[color="blue",label="mouse help",shape="egg",style="bold"];
+	n20[color="blue",label="navigation",shape="egg",style="bold"];
+	n36[color="blue",label="nvl",shape="egg",style="bold"];
+	n37[color="blue",label="nvl dialogue",shape="egg",style="bold"];
+	n27[color="blue",label="preferences",shape="egg",style="bold"];
+	n24[color="blue",label="save",shape="egg",style="bold"];
+	n2->n2[color="blue"];
+	n2->n2[color="blue"];
+	n2->n2[color="blue"];
+	n2->n2[color="blue"];
+	n2->n2[color="blue"];
+	n2->n2[color="blue"];
+	n1->n1[color="blue"];
+	n1->n1[color="blue"];
+	n1->n1[color="blue"];
+	n1->n1[color="blue"];
+	n1->n1[color="blue"];
+	n1->n1[color="blue"];
+	n1->n1[color="blue"];
+	n1->n1[color="blue"];
+	n23->n22[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n25->n22[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n22->n20[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n12->n13[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n29->n22[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n29->n30[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n29->n31[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n29->n32[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n28->n22[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n26->n25[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n21->n20[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n36->n37[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n36->n37[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n27->n22[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	n24->n25[arrowhead="diamond",arrowtail="inv",color="blue",style="dotted"];
+	
+}

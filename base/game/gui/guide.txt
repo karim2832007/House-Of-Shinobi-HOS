@@ -1,0 +1,2 @@
+>512x768
+>extras upscale x1.4 R.ESRGAN 4x+ANIME

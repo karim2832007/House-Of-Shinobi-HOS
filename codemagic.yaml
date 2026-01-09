@@ -31,17 +31,14 @@ workflows:
             -scheme HoS \
             -configuration Release \
             -archivePath build/HOS.xcarchive \
-            archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" PROVISIONING_PROFILE_SPECIFIER=""
+            archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
 
       - name: Export unsigned IPA
         script: |
-          # Create exportOptions.plist (unsigned-safe)
+          # Minimal exportOptions.plist (required for unsigned archives)
           cat <<EOF > exportOptions.plist
           {
-            "method": "development",
-            "signingStyle": "manual",
-            "compileBitcode": false,
-            "stripSwiftSymbols": false
+            "method": "development"
           }
           EOF
 

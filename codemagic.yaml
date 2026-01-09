@@ -33,21 +33,13 @@ workflows:
             -archivePath build/HOS.xcarchive \
             archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
 
-      - name: Export unsigned IPA
+      - name: Manually package unsigned IPA
         script: |
-          # Minimal exportOptions.plist (required for unsigned archives)
-          cat <<EOF > exportOptions.plist
-          {
-            "method": "development"
-          }
-          EOF
-
-          # Export unsigned IPA
-          xcodebuild \
-            -exportArchive \
-            -archivePath build/HOS.xcarchive \
-            -exportPath build/ipa \
-            -exportOptionsPlist exportOptions.plist
+          mkdir -p Payload
+          cp -R build/HOS.xcarchive/Products/Applications/*.app Payload/
+          zip -r HoS-unsigned.ipa Payload
+          mkdir -p build/ipa
+          mv HoS-unsigned.ipa build/ipa/
 
     artifacts:
       - build/ipa/*.ipa

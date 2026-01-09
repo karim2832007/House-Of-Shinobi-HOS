@@ -35,11 +35,8 @@ workflows:
 
       - name: Export unsigned IPA
         script: |
-          xcodebuild \
-            -exportArchive \
-            -archivePath build/HOS.xcarchive \
-            -exportPath build/ipa \
-            -exportOptionsPlist <(cat <<EOF
+          # Create exportOptions.plist (Codemagic-safe)
+          cat <<EOF > exportOptions.plist
           {
             "method": "ad-hoc",
             "compileBitcode": false,
@@ -50,7 +47,13 @@ workflows:
             "provisioningProfiles": {}
           }
           EOF
-          )
+
+          # Export unsigned IPA
+          xcodebuild \
+            -exportArchive \
+            -archivePath build/HOS.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist exportOptions.plist
 
     artifacts:
       - build/ipa/*.ipa

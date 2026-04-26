@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Character Summon Roulette</title>
+<style>
+  :root {
+    --card-width: 140px;
+    --card-height: 200px;
+    --container-width: 800px;
+  }
+
+  body {
+    background-color: #1a1a24;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  /* The Roulette Window */
+  .roulette-container {
+    width: var(--container-width);
+    height: var(--card-height);
+    background: #0d0d14;
+    border: 3px solid #d4af37; /* Gold border */
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.2) inset, 0 10px 30px rgba(0,0,0,0.8);
+  }
+
+  /* The Red Center Selector Line */
+  .selector-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    background: #ff4757;
+    z-index: 10;
+    transform: translateX(-50%);
+    box-shadow: 0 0 10px #ff4757;
+  }
+
+  /* The Track that slides */
+  .track {
+    display: flex;
+    height: 100%;
+    width: max-content;
+    /* The cubic-bezier is the magic for the CS:GO spin down effect */
+    transition: transform 6s cubic-bezier(0.08, 0.82, 0.17, 1);
+  }
+
+  /* Individual Cards */
+  .card {
+    width: var(--card-width);
+    height: var(--card-height);
+    flex-shrink: 0;
+    border-right: 2px solid #222;
+    background-color: #111;
+    background-size: cover;
+    background-position: top center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* The Hidden "?" Cards */
+  .card.hidden::after {
+    content: '?';
+    font-size: 60px;
+    font-weight: bold;
+    color: #444;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+  }
+
+  .summon-btn {
+    margin-top: 40px;
+    padding: 15px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(45deg, #d4af37, #b58500);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .summon-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 10px rgba(212, 175, 55, 0.4);
+  }
+
+  .summon-btn:disabled {
+    background: #555;
+    color: #888;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+</style>
+</head>
+<body>
+
+  <h1>Character Summon</h1>
+  
+  <div class="roulette-container">
+    <div class="selector-line"></div>
+    <div class="track" id="roulette-track">
+      <!-- Cards will be injected here by JS -->
+    </div>
+  </div>
+
+  <button class="summon-btn" id="summon-btn">Summon (1x Ticket)</button>
+
+<script>
+  const track = document.getElementById('roulette-track');
+  const button = document.getElementById('summon-btn');
+  
+  // --- CONFIGURATION ---
+  const totalCards = 60; // How many cards total in the spin
+  const winningIndex = 50; // The card it stops on
+  const cardWidth = 140; 
+  const containerWidth = 800;
+  
+  // Replace this with the path to the image you uploaded!
+  const winningImageURL = 'character.webp'; 
+
+  // Function to build the track
+  function buildTrack() {
+    track.innerHTML = ''; // clear existing
+    track.style.transition = 'none'; // reset transition
+    track.style.transform = 'translateX(0px)'; // reset position
+
+    for (let i = 0; i < totalCards; i++) {
+      const card = document.createElement('div');
+      card.classList.add('card');
+      
+      if (i === winningIndex) {
+        // This is the winning card! Apply your image.
+        card.style.backgroundImage = `url('${winningImageURL}')`;
+        // Make sure image fits nicely
+        card.style.backgroundSize = 'cover'; 
+      } else {
+        // This is a hidden character
+        card.classList.add('hidden');
+        // Optional: add a slight gradient to make the hidden cards look nice
+        card.style.background = 'linear-gradient(135deg, #2a2a35 0%, #111 100%)'; 
+      }
+      
+      track.appendChild(card);
+    }
+  }
+
+  // Handle the Summon button click
+  button.addEventListener('click', () => {
+    button.disabled = true;
+    button.innerText = "Summoning...";
+
+    // Rebuild track so you can spin multiple times
+    buildTrack();
+
+    // Force the browser to register the reset before animating
+    void track.offsetWidth; 
+
+    // CALCULATE WHERE TO STOP:
+    // 1. Move left by the number of cards before the winner
+    let stopPosition = (winningIndex * cardWidth);
+    
+    // 2. Adjust so the card is in the middle of the container, not the left edge
+    stopPosition -= (containerWidth / 2);
+    stopPosition += (cardWidth / 2);
+
+    // 3. Add a random offset so it doesn't always stop perfectly dead-center
+    // (Between -40px and +40px from the center of the card)
+    const randomJitter = Math.floor(Math.random() * 80) - 40;
+    stopPosition += randomJitter;
+
+    // Apply the spin animation
+    track.style.transition = 'transform 6s cubic-bezier(0.08, 0.82, 0.17, 1)';
+    track.style.transform = `translateX(-${stopPosition}px)`;
+
+    // Re-enable button after animation finishes (6 seconds)
+    setTimeout(() => {
+      button.disabled = false;
+      button.innerText = "Summon Again";
+    }, 6000);
+  });
+
+  // Build the initial track on load
+  buildTrack();
+
+</script>
+</body>
+</html>
